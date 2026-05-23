@@ -5,7 +5,7 @@ import { useAuth } from '../context/AuthContext';
 import { QRCodeSVG } from 'qrcode.react';
 import { 
   User, Dumbbell, Apple, LogOut, ShieldAlert, Award, 
-  Mail, Phone, Calendar, Check, AlertTriangle, HelpCircle, Edit3
+  Mail, Phone, Calendar, Check, AlertTriangle, HelpCircle, Edit3, Send
 } from 'lucide-react';
 
 const MemberDashboard = () => {
@@ -21,6 +21,10 @@ const MemberDashboard = () => {
   // UI state
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  
+  // Support state
+  const [supportForm, setSupportForm] = useState({ subject: '', message: '', sendTo: 'admin' });
+  const [supportStatus, setSupportStatus] = useState('');
 
   useEffect(() => {
     if (!member) {
@@ -57,6 +61,26 @@ const MemberDashboard = () => {
   const handleLogout = () => {
     logoutMember();
     navigate('/');
+  };
+
+  const submitSupportQuery = async (e) => {
+    e.preventDefault();
+    if (supportForm.sendTo === 'trainer' && !profile?.trainer) {
+      alert('You do not have an assigned trainer.');
+      return;
+    }
+    
+    setSupportStatus('submitting');
+    try {
+      const headers = getAuthHeaders('member');
+      await axios.post(`${import.meta.env.VITE_API_URL}/support/member`, supportForm, { headers });
+      setSupportStatus('success');
+      setSupportForm({ ...supportForm, subject: '', message: '' });
+      setTimeout(() => setSupportStatus(''), 3000);
+    } catch (err) {
+      alert('Error submitting query. Please try again.');
+      setSupportStatus('');
+    }
   };
 
   const groupedWorkouts = () => {
@@ -120,6 +144,13 @@ const MemberDashboard = () => {
             disabled={isBlocked}
           >
             <Apple size={18} /> Meal guideline
+          </button>
+          <button 
+            className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg font-medium transition-all ${activeTab === 'support' ? 'bg-primary/10 text-primary' : 'text-textSecondary hover:text-white hover:bg-gray-800/50'}`}
+            onClick={() => setActiveTab('support')}
+            disabled={isBlocked}
+          >
+            <HelpCircle size={18} /> Support HQ
           </button>
           <div className="mt-auto">
             <button className="w-full flex items-center gap-3 px-4 py-3 rounded-lg font-medium text-red-500 hover:bg-red-500/10 transition-all" onClick={handleLogout}>
@@ -335,6 +366,82 @@ const MemberDashboard = () => {
                         No nutrition directives prescribed yet. Reach out to your coach.
                       </div>
                     )}
+                  </div>
+                </div>
+              )}
+
+              {/* -------------------- SUPPORT TAB -------------------- */}
+              {activeTab === 'support' && (
+                <div className="max-w-4xl mx-auto space-y-8">
+                  <div className="bg-surface border border-gray-800 rounded-xl p-8 shadow-lg">
+                    <h2 className="text-2xl font-extrabold text-white tracking-tight uppercase mb-2 flex items-center gap-3">
+                      <Send size={24} className="text-primary" /> Support Center
+                    </h2>
+                    <p className="text-textSecondary mb-8">Send an inquiry directly to gym administration or your assigned coach.</p>
+
+                    {supportStatus === 'success' && (
+                      <div className="bg-green-500/10 border border-green-500/20 text-green-500 p-4 rounded-lg mb-6 flex items-center gap-3 font-bold uppercase tracking-wider text-sm">
+                        <Check size={18} /> Support Ticket Submitted Successfully!
+                      </div>
+                    )}
+
+                    <form onSubmit={submitSupportQuery} className="space-y-6">
+                      <div className="flex flex-col gap-2">
+                        <label className="text-xs font-bold text-textSecondary uppercase tracking-widest">Route To</label>
+                        <div className="flex gap-4 p-1 bg-background border border-gray-800 rounded-lg max-w-sm">
+                          <button
+                            type="button"
+                            className={`flex-1 py-2 text-xs font-bold uppercase tracking-widest rounded-md transition-all ${supportForm.sendTo === 'admin' ? 'bg-primary text-white shadow-lg' : 'text-textSecondary hover:text-white'}`}
+                            onClick={() => setSupportForm({ ...supportForm, sendTo: 'admin' })}
+                          >
+                            Admin
+                          </button>
+                          <button
+                            type="button"
+                            className={`flex-1 py-2 text-xs font-bold uppercase tracking-widest rounded-md transition-all ${supportForm.sendTo === 'trainer' ? 'bg-blue-600 text-white shadow-lg' : 'text-textSecondary hover:text-white'} ${!profile?.trainer && 'opacity-50 cursor-not-allowed'}`}
+                            onClick={() => {
+                              if (profile?.trainer) setSupportForm({ ...supportForm, sendTo: 'trainer' });
+                            }}
+                          >
+                            My Coach
+                          </button>
+                        </div>
+                        {!profile?.trainer && (
+                          <span className="text-[10px] text-gray-500 mt-1 italic">You cannot route to coach because none is assigned to you.</span>
+                        )}
+                      </div>
+
+                      <div className="flex flex-col gap-2">
+                        <label className="text-xs font-bold text-textSecondary uppercase tracking-widest">Subject</label>
+                        <input 
+                          type="text" 
+                          className="bg-background border border-gray-700 text-white px-4 py-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary font-medium"
+                          placeholder={supportForm.sendTo === 'admin' ? "E.g. Issue with billing or gateway access" : "E.g. Alternative exercise for back pain"} 
+                          value={supportForm.subject}
+                          onChange={(e) => setSupportForm({ ...supportForm, subject: e.target.value })}
+                          required 
+                        />
+                      </div>
+                      
+                      <div className="flex flex-col gap-2">
+                        <label className="text-xs font-bold text-textSecondary uppercase tracking-widest">Message</label>
+                        <textarea 
+                          className="bg-background border border-gray-700 text-white px-4 py-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary font-medium min-h-[150px] resize-y"
+                          placeholder="Please provide details about your inquiry..."
+                          value={supportForm.message}
+                          onChange={(e) => setSupportForm({ ...supportForm, message: e.target.value })}
+                          required 
+                        ></textarea>
+                      </div>
+
+                      <button 
+                        type="submit" 
+                        disabled={supportStatus === 'submitting'}
+                        className="bg-primary text-white font-heading font-bold tracking-wider px-8 py-3 rounded-lg hover:bg-primaryHover transition-all flex items-center justify-center gap-2 shadow-[0_4px_14px_rgba(232,85,62,0.3)] disabled:opacity-50"
+                      >
+                        {supportStatus === 'submitting' ? 'SENDING...' : <><Send size={18} /> SUBMIT TICKET</>}
+                      </button>
+                    </form>
                   </div>
                 </div>
               )}

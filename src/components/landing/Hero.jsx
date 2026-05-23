@@ -3,7 +3,7 @@ import { ArrowRight, Play } from 'lucide-react';
 
 const Hero = () => {
   return (
-    <section className="relative h-screen min-h-[600px] flex items-center justify-center pt-20">
+    <section id="about" className="relative h-screen min-h-[600px] flex items-center justify-center pt-20">
       {/* Background Image & Overlay */}
       <div 
         className="absolute inset-0 z-0 bg-cover bg-center bg-no-repeat"
