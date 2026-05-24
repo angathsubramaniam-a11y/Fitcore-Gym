@@ -26,14 +26,6 @@ const MemberDashboard = () => {
   const [supportForm, setSupportForm] = useState({ subject: '', message: '', sendTo: 'admin' });
   const [supportStatus, setSupportStatus] = useState('');
 
-  useEffect(() => {
-    if (!member) {
-      navigate('/member/login');
-      return;
-    }
-    fetchMemberData();
-  }, [member]);
-
   const fetchMemberData = async () => {
     setLoading(true);
     setError('');
@@ -57,6 +49,16 @@ const MemberDashboard = () => {
       setLoading(false);
     }
   };
+
+  useEffect(() => {
+    if (!member) {
+      navigate('/member/login');
+      return;
+    }
+    fetchMemberData();
+  }, [member]);
+
+
 
   const handleLogout = () => {
     logoutMember();
@@ -117,13 +119,13 @@ const MemberDashboard = () => {
   const isBlocked = profile?.status === 'blocked';
 
   return (
-    <div className="flex h-screen bg-background text-textPrimary">
+    <div className="flex flex-col md:flex-row h-screen bg-background text-textPrimary overflow-hidden">
       {/* Sidebar */}
-      <aside className="w-64 bg-surface border-r border-gray-800 flex flex-col">
-        <div className="p-6 flex items-center gap-2 text-2xl font-heading font-extrabold text-white border-b border-gray-800">
-          <span className="text-primary">⚡</span> FITCORE
+      <aside className="w-full md:w-64 bg-surface border-b md:border-b-0 md:border-r border-gray-800 flex flex-col shrink-0 z-30">
+        <div className="p-4 md:p-6 flex justify-between items-center text-2xl font-heading font-extrabold text-white border-b border-gray-800">
+          <span className="flex items-center gap-2"><span className="text-primary">⚡</span> FITCORE</span>
         </div>
-        <nav className="flex-1 py-6 flex flex-col gap-2 px-4">
+        <nav className="flex-none md:flex-1 py-4 md:py-6 flex flex-row md:flex-col gap-2 px-4 overflow-x-auto no-scrollbar whitespace-nowrap">
           <button 
             className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg font-medium transition-all ${activeTab === 'overview' ? 'bg-primary/10 text-primary' : 'text-textSecondary hover:text-white hover:bg-gray-800/50'}`}
             onClick={() => setActiveTab('overview')}
@@ -152,9 +154,9 @@ const MemberDashboard = () => {
           >
             <HelpCircle size={18} /> Support HQ
           </button>
-          <div className="mt-auto">
-            <button className="w-full flex items-center gap-3 px-4 py-3 rounded-lg font-medium text-red-500 hover:bg-red-500/10 transition-all" onClick={handleLogout}>
-              <LogOut size={18} /> Log Out
+          <div className="md:mt-auto ml-auto md:ml-0">
+            <button className="flex items-center gap-3 px-4 py-3 rounded-lg font-medium text-red-500 hover:bg-red-500/10 transition-all" onClick={handleLogout}>
+              <LogOut size={18} /> <span className="hidden md:inline">Log Out</span>
             </button>
           </div>
         </nav>

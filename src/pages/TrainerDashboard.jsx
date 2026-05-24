@@ -95,18 +95,6 @@ const TrainerDashboard = () => {
 
   const [supportForm, setSupportForm] = useState({ subject: '', message: '' });
 
-  useEffect(() => {
-    if (!trainer) {
-      navigate('/trainer/login');
-      return;
-    }
-    fetchDashboardData();
-  }, [trainer]);
-
-  useEffect(() => {
-    localStorage.setItem('fitcore_exercise_library', JSON.stringify(exerciseLibrary));
-  }, [exerciseLibrary]);
-
   async function fetchDashboardData() {
     setLoading(true);
     setError('');
@@ -125,6 +113,20 @@ const TrainerDashboard = () => {
       setLoading(false);
     }
   };
+
+  useEffect(() => {
+    if (!trainer) {
+      navigate('/trainer/login');
+      return;
+    }
+    fetchDashboardData();
+  }, [trainer]);
+
+  useEffect(() => {
+    localStorage.setItem('fitcore_exercise_library', JSON.stringify(exerciseLibrary));
+  }, [exerciseLibrary]);
+
+
 
   const handleSelectClient = async (client) => {
     setSelectedClient(client);
@@ -308,13 +310,13 @@ const TrainerDashboard = () => {
   const availableExercises = (exerciseLibrary || []).filter(ex => currentSplitCategories.includes(ex.category));
 
   return (
-    <div className="flex h-screen bg-background text-textPrimary">
+    <div className="flex flex-col md:flex-row h-screen bg-background text-textPrimary overflow-hidden">
       {/* Sidebar */}
-      <aside className="w-64 bg-surface border-r border-gray-800 flex flex-col z-10">
-        <div className="p-6 flex items-center gap-2 text-2xl font-heading font-extrabold text-white border-b border-gray-800">
-          <span className="text-primary">⚡</span> FITCORE
+      <aside className="w-full md:w-64 bg-surface border-b md:border-b-0 md:border-r border-gray-800 flex flex-col z-10 shrink-0">
+        <div className="p-4 md:p-6 flex justify-between items-center text-2xl font-heading font-extrabold text-white border-b border-gray-800">
+          <span className="flex items-center gap-2"><span className="text-primary">⚡</span> FITCORE</span>
         </div>
-        <nav className="flex-1 py-6 flex flex-col gap-2 px-4">
+        <nav className="flex-none md:flex-1 py-4 md:py-6 flex flex-row md:flex-col gap-2 px-4 overflow-x-auto no-scrollbar whitespace-nowrap">
           <button 
             className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg font-medium transition-all ${activeTab === 'overview' ? 'bg-primary/10 text-primary' : 'text-textSecondary hover:text-white hover:bg-gray-800/50'}`}
             onClick={() => setActiveTab('overview')}
@@ -333,9 +335,9 @@ const TrainerDashboard = () => {
           >
             <HelpCircle size={18} /> Support HQ
           </button>
-          <div className="mt-auto">
-            <button className="w-full flex items-center gap-3 px-4 py-3 rounded-lg font-medium text-red-500 hover:bg-red-500/10 transition-all" onClick={handleLogout}>
-              <LogOut size={18} /> Log Out
+          <div className="md:mt-auto ml-auto md:ml-0">
+            <button className="flex items-center gap-3 px-4 py-3 rounded-lg font-medium text-red-500 hover:bg-red-500/10 transition-all" onClick={handleLogout}>
+              <LogOut size={18} /> <span className="hidden md:inline">Log Out</span>
             </button>
           </div>
         </nav>
@@ -408,7 +410,7 @@ const TrainerDashboard = () => {
 
             {/* CLIENTS TAB */}
             {activeTab === 'clients' && (
-              <div className="flex flex-col lg:flex-row gap-8 h-[calc(100vh-160px)]">
+              <div className="flex flex-col lg:flex-row gap-8 lg:h-[calc(100vh-160px)]">
                 
                 {/* Roster List */}
                 <div className="w-full lg:w-1/3 flex flex-col bg-surface border border-gray-800 rounded-xl overflow-hidden">

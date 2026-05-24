@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">fitcore</string>
+    <string name="title_activity_main">fitcore</string>
+    <string name="package_name">com.fitcore.app</string>
+    <string name="custom_url_scheme">com.fitcore.app</string>
+</resources>
