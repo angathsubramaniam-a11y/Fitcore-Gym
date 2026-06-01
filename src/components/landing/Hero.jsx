@@ -1,5 +1,6 @@
 import React from 'react';
 import { ArrowRight, Play } from 'lucide-react';
+import { motion } from 'framer-motion';
 
 const Hero = () => {
   return (
@@ -14,19 +15,39 @@ const Hero = () => {
       </div>
 
       <div className="relative z-10 max-w-7xl mx-auto w-full px-6 md:px-12 flex flex-col items-start mt-10">
-        <div className="inline-block px-3 py-1 bg-primary/20 border border-primary/40 rounded-sm mb-6">
+        <motion.div 
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
+          className="inline-block px-3 py-1 bg-primary/20 border border-primary/40 rounded-sm mb-6"
+        >
           <span className="text-primary text-xs font-bold tracking-widest uppercase">Elite Training Facility</span>
-        </div>
+        </motion.div>
         
-        <h1 className="text-6xl md:text-8xl font-extrabold text-white leading-[0.9] tracking-tight mb-6 max-w-3xl">
+        <motion.h1 
+          initial={{ opacity: 0, x: -30 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.8, delay: 0.2 }}
+          className="text-6xl md:text-8xl font-extrabold text-white leading-[0.9] tracking-tight mb-6 max-w-3xl"
+        >
           FORGE YOUR <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-primaryHover">ULTIMATE</span> PHYSIQUE
-        </h1>
+        </motion.h1>
         
-        <p className="text-lg md:text-xl text-textSecondary mb-10 max-w-xl font-medium leading-relaxed">
+        <motion.p 
+          initial={{ opacity: 0, x: -30 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.8, delay: 0.4 }}
+          className="text-lg md:text-xl text-textSecondary mb-10 max-w-xl font-medium leading-relaxed"
+        >
           Access world-class equipment, elite coaching, and custom nutrition protocols designed to push you beyond your limits.
-        </p>
+        </motion.p>
         
-        <div className="flex flex-wrap gap-4">
+        <motion.div 
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 0.6 }}
+          className="flex flex-wrap gap-4"
+        >
           <a href="#plans" className="flex items-center gap-2 bg-primary text-white px-8 py-4 rounded-md font-heading text-xl font-bold tracking-wider hover:bg-primaryHover transition-all hover:scale-105 shadow-[0_0_20px_rgba(232,85,62,0.4)]">
             JOIN THE ELITE <ArrowRight size={20} />
           </a>
@@ -34,11 +55,16 @@ const Hero = () => {
             <span className="flex items-center justify-center w-8 h-8 rounded-full bg-primary/20 text-primary"><Play size={14} fill="currentColor" /></span>
             VIEW FACILITY
           </a>
-        </div>
+        </motion.div>
       </div>
 
       {/* Stats Bar */}
-      <div className="absolute bottom-0 w-full border-t border-gray-800 bg-background/80 backdrop-blur-md">
+      <motion.div 
+        initial={{ opacity: 0, y: 50 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.8, delay: 0.8 }}
+        className="absolute bottom-0 w-full border-t border-gray-800 bg-background/80 backdrop-blur-md"
+      >
         <div className="max-w-7xl mx-auto px-6 md:px-12 py-6 grid grid-cols-2 md:grid-cols-4 gap-6 divide-x divide-gray-800/50">
           <div className="text-center px-4">
             <h3 className="text-3xl md:text-4xl font-extrabold text-primary mb-1">50K+</h3>
@@ -57,7 +83,7 @@ const Hero = () => {
             <p className="text-xs font-bold text-textSecondary tracking-widest uppercase">Results Driven</p>
           </div>
         </div>
-      </div>
+      </motion.div>
     </section>
   );
 };

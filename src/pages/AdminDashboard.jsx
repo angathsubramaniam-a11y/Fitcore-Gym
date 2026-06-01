@@ -720,7 +720,7 @@ const AdminDashboard = () => {
                     <label className="text-[11px] font-bold text-textSecondary uppercase tracking-widest">Category</label>
                     <select className="w-full bg-background border border-gray-700 text-white px-3 py-2.5 rounded-lg focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary text-sm" value={memberForm.category} onChange={(e) => setMemberForm({...memberForm, category: e.target.value})}>
                       <option value="General">General</option>
-                      <option value="VIP">VIP</option>
+                      <option value="Personal Training">Personal Training</option>
                       <option value="Student">Student</option>
                     </select>
                   </div>
